@@ -1,0 +1,60 @@
+#
+# A theme with basic info and nice colors and characters
+#
+# Author: Greivin Britton
+#
+# Email: brittongr@gmail.com
+#
+
+function prompt_monkey_precmd
+{
+	git-info
+	#vcs_info
+}
+
+function prompt_monkey_setup
+{
+	setopt LOCAL_OPTIONS
+  	unsetopt XTRACE KSH_ARRAYS
+  	prompt_opts=(cr percent subst)
+
+	# Load required functions
+	autoload -Uz add-zsh-hook
+	#autoload -Uz vcs_info
+
+	# Add hook for calling vsc_info before each command
+	add-zsh-hook precmd prompt_monkey_precmd
+
+	# Set vcs_info parameters.
+  	#zstyle ':vcs_info:*' enable bzr git hg svn
+  	#zstyle ':vcs_info:*' check-for-changes true
+  	#zstyle ':vcs_info:*' stagedstr '%F{green}●%f'
+  	#zstyle ':vcs_info:*' unstagedstr '%F{yellow}●%f'
+  	#zstyle ':vcs_info:*' formats ' %F{blue}(%F{red}%b%c%u%F{blue})%f'
+  	#zstyle ':vcs_info:*' actionformats " - [%b%c%u|%F{cyan}%a%f]"
+  	#zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b|%F{cyan}%r%f'
+  	#zstyle ':vcs_info:git*+set-message:*' hooks git_status
+
+	# Parameters 
+	# %n username
+	# %m hostname
+	# %~ current directory
+	
+	#PROMPT='%n@%m:%~${vcs_info_msg_0_}$ '
+	#RPROMPT=''
+
+	# Set git-info parameters.
+ 	zstyle ':prezto:module:git:info' verbose 'yes'
+  	zstyle ':prezto:module:git:info:branch' format '%F{green}%b%f'
+  	zstyle ':prezto:module:git:info:clean' format ' %F{green}✔%f'
+  	zstyle ':prezto:module:git:info:dirty' format ' %F{red}✗%f'
+  	zstyle ':prezto:module:git:info:keys' format \
+    	'prompt' ' %F{blue}(%f$(coalesce "%b" "%p" "%c")${git_info[rprompt]}%s%F{green}%F{blue})%f' \
+    	'rprompt' '%C%D'
+
+  	# Define prompts.
+  	PROMPT='%m:%~${(e)git_info[prompt]}$ '
+  	RPROMPT=''
+}
+
+prompt_monkey_setup "$@"
